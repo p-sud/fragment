@@ -1,13 +1,14 @@
 // Intended to be a drop-in replacement for
 // https://github.com/aidenlab/juicer/blob/encode/CPU/common/fragment.pl
 
-// Currently the IO works, but the binary search results are completely wrong
+// Currently the IO works, but the binary search results are completely wrong?
 
 use std::io::{self, BufReader, BufRead, Write};
 use std::fs::File;
 use std::collections::HashMap;
 use structopt::StructOpt;
 
+// Adapted from Rust CLI tutorial
 #[derive(StructOpt)]
 struct Cli {
     #[structopt(parse(from_os_str))]
@@ -22,8 +23,9 @@ fn bsearch(target_value: i64, positions: &Vec<i64>) -> i64 {
     // Assumes that the positions are already sorted
     let mut lower_index: i64 = 0;
     let mut upper_index = positions.len() as i64 - 1;
-    let mut current_index = (lower_index + upper_index) / 2;
+    let mut current_index;
     while lower_index <= upper_index {
+        current_index = (lower_index + upper_index) / 2;
         let current_value = positions[current_index as usize];
         if current_value < target_value {
             lower_index = current_index + 1;
@@ -32,7 +34,6 @@ fn bsearch(target_value: i64, positions: &Vec<i64>) -> i64 {
         } else {
             return current_index + 1;
         }
-        current_index = (lower_index + upper_index) / 2;
     }
     return lower_index;
 }
@@ -83,7 +84,7 @@ fn main() -> io::Result<()> {
         );
         writeln!(
             outfile_writer,
-            "{} {} {} {} {}",
+            "{} {} {} {} {} ",
             &split_line[0..3].join(" "),
             index1,
             &split_line[3..6].join(" "),
