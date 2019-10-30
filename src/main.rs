@@ -3,7 +3,7 @@
 
 // Currently the IO works, but the binary search results are completely wrong?
 
-use std::io::{self, BufReader, BufRead, Write};
+use std::io::{self, BufReader, BufRead, BufWriter, Write};
 use std::fs::File;
 use std::collections::HashMap;
 use structopt::StructOpt;
@@ -69,7 +69,8 @@ fn main() -> io::Result<()> {
 
     let infile = File::open(&args.infile)?;
     let infile_reader = BufReader::new(infile);
-    let mut outfile_writer = File::create(&args.outfile)?;
+    let outfile = File::create(&args.outfile)?;
+    let mut outfile_writer = BufWriter::new(outfile);
 
     for line in infile_reader.lines() {
         let split_line = line.as_ref().unwrap().split_whitespace().collect::<Vec<_>>();
@@ -82,14 +83,15 @@ fn main() -> io::Result<()> {
             split_line[5].parse::<i64>().unwrap(),
             &sites_by_chr[split_line[4]],
         );
-        writeln!(
-            outfile_writer,
-            "{} {} {} {} {} ",
-            &split_line[0..3].join(" "),
-            index1,
-            &split_line[3..6].join(" "),
-            index2,
-            &split_line[6..].join(" "),
+        outfile_writer.write(
+            format!(
+                "{} {} {} {} {} \n",
+                &split_line[0..3].join(" "),
+                index1,
+                &split_line[3..6].join(" "),
+                index2,
+                &split_line[6..].join(" "),
+            ).as_bytes()
         )?;
     }
 
