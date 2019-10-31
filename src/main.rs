@@ -19,7 +19,7 @@ struct Cli {
     site_file: std::path::PathBuf,
 }
 
-fn bsearch(target_value: i64, positions: &Vec<i64>) -> i64 {
+fn bsearch(target_value: i64, positions: &[i64]) -> i64 {
     // Assumes that the positions are already sorted
     let mut lower_index: i64 = 0;
     let mut upper_index = positions.len() as i64 - 1;
@@ -35,7 +35,7 @@ fn bsearch(target_value: i64, positions: &Vec<i64>) -> i64 {
             return current_index + 1;
         }
     }
-    return lower_index;
+    lower_index
 }
 
 fn main() -> io::Result<()> {
@@ -83,7 +83,7 @@ fn main() -> io::Result<()> {
             split_line[5].parse::<i64>().unwrap(),
             &sites_by_chr[split_line[4]],
         );
-        outfile_writer.write(
+        outfile_writer.write_all(
             format!(
                 "{} {} {} {} {} \n",
                 &split_line[0..3].join(" "),
