@@ -1,8 +1,6 @@
 // Intended to be a drop-in replacement for
 // https://github.com/aidenlab/juicer/blob/encode/CPU/common/fragment.pl
 
-// Currently the IO works, but the binary search results are completely wrong?
-
 use std::io::{self, BufReader, BufRead, BufWriter, Write};
 use std::fs::File;
 use std::collections::HashMap;
